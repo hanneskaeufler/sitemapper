@@ -4,7 +4,7 @@ module Sitemapper
   class Storage
     getter sitemaps
 
-    def initialize(@sitemaps : Array(Hash(String, String)), @method : Symbol)
+    def initialize(@sitemaps : Array(NamedTuple(name: String, data: String)), @method : Symbol)
     end
 
     def save(path : String)
@@ -21,15 +21,15 @@ module Sitemapper
     end
 
     private def write_sitemap(path, sitemap)
-      File.open([path, sitemap["name"]].join('/'), "w") do |f|
-        f << sitemap["data"]
+      File.open([path, sitemap[:name]].join('/'), "w") do |f|
+        f << sitemap[:data]
       end
     end
 
     private def write_compressed_sitemap(path, sitemap)
-      File.open([path, sitemap["name"] + ".gz"].join('/'), "w") do |f|
+      File.open([path, sitemap[:name] + ".gz"].join('/'), "w") do |f|
         Gzip::Writer.open(f) do |gzip|
-          gzip << sitemap["data"]
+          gzip << sitemap[:data]
         end
       end
     end
